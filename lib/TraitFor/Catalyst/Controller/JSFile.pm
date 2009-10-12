@@ -12,9 +12,11 @@ has is_cached => (
 sub js_file : Local {
    my ($self, $c) = @_;
    if ($c->debug or !$self->is_cached) {
+      # view should be configurable
       $c->forward("View::JavaScript");
       return if $c->debug;
       require File::Spec;
+      # filename should be configurable
       my $filename = File::Spec->catfile($c->path_to('root'), 'static', 'js', 'all.js');
       unlink $filename if stat $filename;
       open my $js_fh, '>', $filename;
@@ -22,12 +24,14 @@ sub js_file : Local {
       close $js_fh;
       $self->is_cached(1);
    }
+   # this needs to be configurable too...
    $c->response->redirect('/static/js/all.js', 300);
 }
 
 1;
 
 =pod
+
 =head1 SYNOPSIS
 
 sub js :Local {

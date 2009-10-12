@@ -25,8 +25,8 @@ sub js_files {
  __PACKAGE__->config(
     javascript => {
        files_expanded => [
-          'MTSI/MTSI.' => [ qw{
-             fn
+          'MTSI/' => [ qw{
+             Foo.fn
              ui.Grid
              }],
           'ACDRI/ACDRI.' => [ qw{
@@ -36,11 +36,22 @@ sub js_files {
        ],
     },
  );
+
  __PACKAGE__->config->{javascript}{files} =
     __PACKAGE__->js_files(__PACKAGE__->{javascript}{files_expanded});
+ # Yields: [qw{MTSI/Foo.fn.js ui.Grid.js ACDRI/ACDRI.fn.js
+ # ACDRI/ACDRI.overrides.js}
+
+=head1 DESCRIPTION
+
+This role is mostly just a small afordance to help with large lists of
+javascript files.
 
 =head1 METHODS
 
 =head2 js_files
+
+This method takes an arrayref of strings pointing to arrayrefs of strings.
+See the synonsis for how that should look.
 
 =end
