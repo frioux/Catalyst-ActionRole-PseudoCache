@@ -1,4 +1,4 @@
-package TraitFor::Catalyst::ExpandableJSFiles;
+package Catalyst::ExpandableJSFiles;
 
 use Moose::Role;
 use Perl6::Gather;

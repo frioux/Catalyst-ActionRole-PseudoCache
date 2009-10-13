@@ -1,4 +1,4 @@
-package ACD::Controller::Root;
+package Catalyst::TraitFor::Controller::JSFile;
 
 use Moose::Role;
 use List::Util 'first';
