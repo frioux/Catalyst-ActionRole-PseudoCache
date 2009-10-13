@@ -9,24 +9,40 @@ has is_cached => (
    default => undef,
 );
 
-sub js_file : Local {
+sub js : Local {
    my ($self, $c) = @_;
-   if ($c->debug or !$self->is_cached) {
-      # view should be configurable
-      $c->forward("View::JavaScript");
+   $c->stash->{js} = [
+      'ext3/adapter/ext/ext-base',
+      $c->debug
+         ? 'ext3/ext-all-debug'
+         : 'ext3/ext-all',
+      @{$c->config->{javascript}{files}}
+   ];
+   $c->forward("View::JavaScript");
+}
+
+around js => sub {
+   my $orig = shift;
+   my $self = shift;
+   my $c    = shift;
+   return $self->$orig($c, @_)
+      if ($c->debug);
+   if (!$self->is_cached) {
       return if $c->debug;
       require File::Spec;
       # filename should be configurable
       my $filename = File::Spec->catfile($c->path_to('root'), 'static', 'js', 'all.js');
       unlink $filename if stat $filename;
       open my $js_fh, '>', $filename;
-      print $js_fh $c->response->body;
+      $self->$orig($c, @_);
+      print {$js_fh} $c->response->body;
       close $js_fh;
       $self->is_cached(1);
+   } else {
+      # this needs to be configurable too...
+      $c->response->redirect('/static/js/all.js', 300);
    }
-   # this needs to be configurable too...
-   $c->response->redirect('/static/js/all.js', 300);
-}
+};
 
 1;
 
