@@ -10,8 +10,8 @@ use Test::Deep;
 use lib "$FindBin::Bin/../lib", "$FindBin::Bin/lib";
 use Catalyst::Test 'TestApp';
 {
-   warn get('/js');
-   warn get('/js');
+   is get('/js'), '{"frew":1}';
+   action_redirect('/js');
 };
 done_testing;
 

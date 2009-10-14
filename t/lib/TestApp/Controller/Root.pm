@@ -12,7 +12,7 @@ __PACKAGE__->config->{pseudo_cache_config} = {
    }
 };
 
-sub js :Local :Does(PseudoCache) {
+sub js :Local :Does(PseudoCache) PCPath(foo) PCUrl(bar) {
     my ( $self, $c ) = @_;
 
     $c->stash->{js} = { frew => 1 };
@@ -25,9 +25,7 @@ sub default :Path {
     $c->response->status(404);
 }
 
-sub end : Private {
-   my ( $self, $c ) = @_;
-   $c->forward( 'TestApp::View::JSON' );
+sub end : Private :ActionClass(RenderView) {
 }
 
 1;

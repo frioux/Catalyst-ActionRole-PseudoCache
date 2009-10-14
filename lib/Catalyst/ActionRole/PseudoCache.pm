@@ -9,12 +9,25 @@ has is_cached => (
    default => undef,
 );
 
+after BUILD => sub {
+   my $class = shift;
+   my ($args) = @_;
+
+   my $attr = $args->{attributes};
+
+   unless (exists $attr->{PCUrl} && $attr->{PCPath}) {
+      Catalyst::Exception->throw(
+	 "Action '$args->{reverse}' requires the PCUrl(<url>) attribute and PCPath(<path>) attribute");
+}
+};
+
+
 around execute => sub {
    my $orig               = shift;
    my $self               = shift;
    my ( $controller, $c ) = @_;
 
-   return $self->$orig($c, @_)
+   return $self->$orig(@_)
       if ($c->debug);
 
    if (!$self->is_cached) {
@@ -35,7 +48,6 @@ around execute => sub {
    } else {
       # this needs to be configurable too...
       $c->response->redirect('/static/js/all.js', 300);
-      return 0;
    }
 };
 
