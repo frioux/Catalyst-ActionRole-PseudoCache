@@ -12,7 +12,7 @@ __PACKAGE__->config->{pseudo_cache_config} = {
    }
 };
 
-sub js :Local :Does(PseudoCache) PCPath(foo) PCUrl(bar) {
+sub js :Local :Does(PseudoCache) PCUrl(/static/js/all.js) {
     my ( $self, $c ) = @_;
 
     $c->stash->{js} = { frew => 1 };

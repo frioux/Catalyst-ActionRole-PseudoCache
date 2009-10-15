@@ -2,6 +2,7 @@ package Catalyst::ActionRole::PseudoCache;
 
 use Moose::Role;
 use autodie;
+use File::Spec;
 
 has is_cached => (
    is      => 'rw',
@@ -12,15 +13,28 @@ has is_cached => (
 has path => (
    is => 'ro',
    isa => 'Str',
+   builder => '_build_path',
+   lazy => 1,
+);
+
+has url => (
+   is => 'ro',
+   isa => 'Str',
    required => 1,
 );
+
+sub _build_path {
+   my $self = shift;
+   my $url = $self->url;
+   return File::Spec->catfile(split qr{/}, $url);
+}
 
 around BUILDARGS => sub {
    my $orig  = shift;
    my $class = shift;
    my ($args) = @_;
    if (my $attr = $args->{attributes}) {
-      return $class->$orig( path => $attr->{PCUrl}->[0], %{$args} );
+      return $class->$orig( url => $attr->{PCUrl}->[0], %{$args} );
    } else {
       return $class->$orig(@_);
    }
@@ -35,9 +49,8 @@ around execute => sub {
       if ($c->debug);
 
    if (!$self->is_cached) {
-      require File::Spec;
-      # filename should be configurable
-      my $filename = File::Spec->catfile($c->path_to('root'), 'static', 'js', 'all.js');
+      my $filename = File::Spec->catfile($c->path_to('root'), $self->path);
+      warn $filename;
 
       unlink $filename if stat $filename;
       open my $js_fh, '>', $filename;
@@ -50,8 +63,7 @@ around execute => sub {
 
       $self->is_cached(1);
    } else {
-      # this needs to be configurable too...
-      $c->response->redirect('/static/js/all.js', 300);
+      $c->response->redirect($self->url, 300);
    }
 };
 
