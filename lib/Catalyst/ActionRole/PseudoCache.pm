@@ -9,18 +9,22 @@ has is_cached => (
    default => undef,
 );
 
-after BUILD => sub {
+has path => (
+   is => 'ro',
+   isa => 'Str',
+   required => 1,
+);
+
+around BUILDARGS => sub {
+   my $orig  = shift;
    my $class = shift;
    my ($args) = @_;
-
-   my $attr = $args->{attributes};
-
-   unless (exists $attr->{PCUrl} && $attr->{PCPath}) {
-      Catalyst::Exception->throw(
-	 "Action '$args->{reverse}' requires the PCUrl(<url>) attribute and PCPath(<path>) attribute");
-}
+   if (my $attr = $args->{attributes}) {
+      return $class->$orig( path => $attr->{PCUrl}->[0], %{$args} );
+   } else {
+      return $class->$orig(@_);
+   }
 };
-
 
 around execute => sub {
    my $orig               = shift;
@@ -50,7 +54,6 @@ around execute => sub {
       $c->response->redirect('/static/js/all.js', 300);
    }
 };
-
 
 1;
 
