@@ -5,27 +5,12 @@ BEGIN { extends 'Catalyst::Controller::ActionRole' };
 
 __PACKAGE__->config->{namespace} = '';
 
-__PACKAGE__->config->{pseudo_cache_config} = {
-   js => {
-      url   => 'frew',
-      path   => 'frew',
-   }
-};
-
-sub js :Local :Does(PseudoCache) PCUrl(/static/js/all.js) {
+sub test :Local :Does(PseudoCache) PCUrl(/foo.txt) {
     my ( $self, $c ) = @_;
 
-    $c->stash->{js} = { frew => 1 };
-    $c->forward('View::JSON');
+    $c->response->body('big fat output');
 }
 
-sub default :Path {
-    my ( $self, $c ) = @_;
-    $c->response->body( 'Page not found' );
-    $c->response->status(404);
-}
-
-sub end : Private :ActionClass(RenderView) {
-}
+sub end : Private :ActionClass(RenderView) {}
 
 1;
