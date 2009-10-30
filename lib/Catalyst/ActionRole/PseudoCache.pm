@@ -1,5 +1,7 @@
 package Catalyst::ActionRole::PseudoCache;
 
+# ABSTRACT: Super simple caching for Catalyst actions
+
 use Moose::Role;
 use autodie;
 use File::Spec;
@@ -82,39 +84,22 @@ around execute => sub {
 
 =head1 SYNOPSIS
 
-package TestApp::Controller::Root;
+ package MyApp::Controller::Root;
 
-use Moose;
-BEGIN { extends 'Catalyst::Controller::ActionRole' };
+ use Moose;
+ BEGIN { extends 'Catalyst::Controller::ActionRole' };
 
-sub js :Local :Does(PseudoCache) PCUrl(/static/js/all.js) {
-   my ($self, $c) = @_;
-   $c->stash->{js} = [
-      'ext3/adapter/ext/ext-base',
-      $c->debug
-         ? 'ext3/ext-all-debug'
-         : 'ext3/ext-all',
-      @{$c->config->{javascript}{files}}
-   ];
-}
-
-sub some_other_action :Local :Does(PseudoCache) PCPath(foo/bar/baz) PCUrl(/static/js/all2.js) {
-   my ($self, $c) = @_;
-   $c->stash->{js} = [
-      'ext3/adapter/ext/ext-base',
-      $c->debug
-         ? 'ext3/ext-all-debug'
-         : 'ext3/ext-all',
-      @{$c->config->{javascript}{files}}
-   ];
-}
+ sub all_js :Local :Does(PseudoCache) PCUrl(/static/js/all.js) {
+    my ($self, $c) = @_;
+    # Long running action to be cached
+ }
 
 =head1 DESCRIPTION
 
 This module was originally made to take the output of
 L<Catalyst::View::JavaScript::Minifier::XS> and store it in a file so that after
-the server has booted once we won't need to generate it again and can let the
-static web server serve up the static file much faster.  Obviously it can be
+the server booted we would not need to generate it again and could let the
+static web server serve up the static file.  Obviously it can be
 used for much more than javascript, but it's mostly made with large, purely
 javascript sites in mind.
 
@@ -124,18 +109,15 @@ javascript sites in mind.
 
 Required.
 
-The url that the action will redirect to after it runs once.
+After the action runs once it will redirect to C<$PCUrl>.
 
 =head2 PCPath
 
-Not Required.
+When the action gets run the first time it will write it's output to C<$PCPath>.
 
-When the action gets run the first time it will write it's output to this path.
+Defaults to C<$c->path_to('root') . $PCUrl>
 
-Defaults to C<$c->path_to('root') . $PCUrl> (roughty)
-
-So using the example given above for the C<js> action, the path will be
+So using the example given above for the C<all_js> action, the path will be
 
  $MyAppLocation/root/static/js/all.js
 
-=end
