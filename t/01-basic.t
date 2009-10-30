@@ -2,16 +2,33 @@
 
 use strict;
 use warnings;
+use autodie;
 
 use FindBin;
-use JSON;
 use Test::More;
-use Test::Deep;
+use Test::WWW::Mechanize::Catalyst;
+use File::Spec;
 use lib "$FindBin::Bin/../lib", "$FindBin::Bin/lib";
+my $root = File::Spec->catfile($FindBin::Bin,qw{lib TestApp root});
+mkdir $root;
+
+my $mech = Test::WWW::Mechanize::Catalyst->new(catalyst_app => 'TestApp');
+$mech->get_ok('/test', 'get works when uncached');
+$mech->content_is('big fat output', '... and the output is correct');
+ok stat File::Spec->catfile($root, 'foo.txt'), '... and the file is cached as expected';
+$mech->get_ok('/test', 'get works when cached');
+$mech->content_is('big fat output', '... and the output is still correct');
 use Catalyst::Test 'TestApp';
 {
-   is get('/test'), 'big fat output';
-   action_redirect('/test');
+   action_redirect('/test', '... and it is done with a redirect');
+   content_like('/test', qr{href="/foo\.txt"}, '... and it redirects to the right place');
+   get('/test2'); #prime the pump
+   content_like('/test2', qr{href="/static/foo\.txt"}, 'action redirects to the right place with a more complex config');
+   ok stat File::Spec->catfile($root, 'bar.txt'), '... and the file is cached as expected, in the configured location';
 };
 done_testing;
 
+END {
+   unlink File::Spec->catfile($root, 'foo.txt');
+   unlink File::Spec->catfile($root, 'bar.txt');
+}

@@ -6,7 +6,7 @@ use warnings;
 use Catalyst::Runtime 5.80;
 
 use parent qw/Catalyst/;
-use Catalyst;
+use Catalyst qw/ Static::Simple /;
 
 __PACKAGE__->config(
    name => 'TestApp',
