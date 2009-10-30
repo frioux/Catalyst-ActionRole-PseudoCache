@@ -11,15 +11,15 @@ has is_cached => (
 );
 
 has path => (
-   is => 'ro',
-   isa => 'Str',
+   is      => 'ro',
+   isa     => 'Str',
    builder => '_build_path',
-   lazy => 1,
+   lazy    => 1,
 );
 
 has url => (
-   is => 'ro',
-   isa => 'Str',
+   is       => 'ro',
+   isa      => 'Str',
    required => 1,
 );
 
