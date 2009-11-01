@@ -101,7 +101,8 @@ L<Catalyst::View::JavaScript::Minifier::XS> and store it in a file so that after
 the server booted we would not need to generate it again and could let the
 static web server serve up the static file.  Obviously it can be
 used for much more than javascript, but it's mostly made with large, purely
-javascript sites in mind.
+javascript sites in mind.  It does not cache the output of the action when the
+server is run in development mode.
 
 =head1 ATTRIBUTES
 
