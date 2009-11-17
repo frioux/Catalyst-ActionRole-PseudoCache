@@ -29,6 +29,9 @@ use Catalyst::Test 'TestApp';
 done_testing;
 
 END {
-   unlink File::Spec->catfile($root, 'foo.txt');
-   unlink File::Spec->catfile($root, 'bar.txt');
+   # for some reason unlinking doesn't work for tmp files in windows
+   unless ($^O eq 'Win32') {
+      unlink File::Spec->catfile($root, 'foo.txt');
+      unlink File::Spec->catfile($root, 'bar.txt');
+   }
 }

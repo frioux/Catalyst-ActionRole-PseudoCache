@@ -1,5 +1,8 @@
 Revision history for Catalyst-ActionRole-PseudoCache
 
+0.093200 Mon Nov 16 21:22:00 CDT 2009
+       - Don't delete tmp files in win32, it doesn't work
+
 0.093050 Sun Nov 01 01:21:00 CDT 2009
        - Clarify POD
 
