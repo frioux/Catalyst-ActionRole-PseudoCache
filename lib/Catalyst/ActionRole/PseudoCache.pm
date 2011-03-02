@@ -116,7 +116,7 @@ After the action runs once it will redirect to C<$PCUrl>.
 
 When the action gets run the first time it will write it's output to C<$PCPath>.
 
-Defaults to C<$c->path_to('root') . $PCUrl>
+Defaults to C<< $c->path_to('root') . $PCUrl >>
 
 So using the example given above for the C<all_js> action, the path will be
 
