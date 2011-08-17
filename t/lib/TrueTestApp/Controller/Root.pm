@@ -17,10 +17,18 @@ sub test_key :Local :Does(PseudoCache) PCTrueCache(1) PCkey('neatkey') {
     $c->response->body('we cached your stuff with your neat key');
 }
 
-sub peek_cache :Local {
+sub peek_cache_test :Local {
    my ( $self, $c ) = @_;
 
-   my $cache = $c->cache->get('TestApp::Controller::Root/test3');
+   my $cache = $c->cache->get('TrueTestApp::Controller::Root/test');
+
+   $c->response->body($cache);
+}
+
+sub peek_cache_key :Local {
+   my ( $self, $c ) = @_;
+
+   my $cache = $c->cache->get('TrueTestApp::Controller::Root/test_key');
 
    $c->response->body($cache);
 }
