@@ -1,4 +1,4 @@
-package TestApp;
+package TrueTestApp;
 
 use strict;
 use warnings;
@@ -6,9 +6,7 @@ use warnings;
 use Catalyst::Runtime 5.80;
 
 use parent qw/Catalyst/;
-use Catalyst qw/ Static::Simple Cache/;
-use Cache::Bounded;
-
+use Catalyst qw/ Cache/;
 
 __PACKAGE__->config(
    name => 'TestApp',
