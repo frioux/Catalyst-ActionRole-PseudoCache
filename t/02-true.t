@@ -9,6 +9,10 @@ use Test::More;
 use Test::WWW::Mechanize::Catalyst;
 use lib "$FindBin::Bin/../lib", "$FindBin::Bin/lib";
 
+plan skip_all => 'These tests require Catalyst::Plugin::Cache'
+   unless eval { require Catalyst::Plugin::Cache; 1 };
+
+
 my $mech = Test::WWW::Mechanize::Catalyst->new(catalyst_app => 'TrueTestApp');
 $mech->get_ok('/peek_cache_test', 'get test works when uncached');
 $mech->get_ok('/peek_cache_key', 'get test_key works when uncached');
