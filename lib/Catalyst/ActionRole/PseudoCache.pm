@@ -153,6 +153,19 @@ sub _pseudo_cache {
  use Moose;
  BEGIN { extends 'Catalyst::Controller::ActionRole' };
 
+ #used with Catalyst::Plugin::Cache 
+ sub cache_js :Local :Does(PseudoCache) PCTrueCache(1) {
+   my ($self, $c) = @_;
+   # Long running action to be cached
+ }
+ 
+ #used with Catalyst::Plugin::Cache and the optional key attr
+ sub cache_with_key :Local :Does(PseudoCache) PCTrueCache(1) PCKey('rememberme'){
+   my ($self, $c) = @_;
+   # Long running action to be cached   
+ }
+
+ #old attrs provided in mercy and love
  sub all_js :Local :Does(PseudoCache) PCUrl(/static/js/all.js) {
     my ($self, $c) = @_;
     # Long running action to be cached
@@ -170,9 +183,23 @@ server is run in development mode.
 
 =head1 ATTRIBUTES
 
+=head2 PCTrueCache
+
+Setting PCTrueCache will use L<Catalyst::Plugin::Cache> and allow a real
+cache backend to do the work. 
+
+=head2 PCKey
+
+PCKey is an optional way of providing a different key for the cache backend.
+The default key is 'Controller::Name/action'. 
+
+The two attributes below are DEPRECATED and provided for back compat only. They
+might disappear in the future. Using PCTrueCache and L<Catalyst::Plugin::Cache>
+is highly recommended.
+
 =head2 PCUrl
 
-Required.
+Required when not using PCTrueCache.
 
 After the action runs once it will redirect to C<$PCUrl>.
 
@@ -186,3 +213,6 @@ So using the example given above for the C<all_js> action, the path will be
 
  $MyAppLocation/root/static/js/all.js
 
+=head1 SEE ALSO
+
+L<Catalyst::Plugin::Cache>
