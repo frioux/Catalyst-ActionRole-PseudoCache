@@ -55,7 +55,7 @@ around BUILDARGS => sub {
    my ($args) = @_;
    if (my $attr = $args->{attributes}) {
       my @args;
-      if($attr->{PCTrueCache}){
+      if ($attr->{PCTrueCache}) {
          @args = (
             ($attr->{PCTrueCache}
                ? ( true_cache => $attr->{PCTrueCache}->[0] )
@@ -64,10 +64,10 @@ around BUILDARGS => sub {
             ($attr->{PCKey}
                ? ( key => $attr->{PCKey}->[0] )
                : ()
-            ),         
+            ),
             %{$args}
-         );   
-      }else{
+         );
+      } else {
          @args = (
             ($attr->{PCUrl}
                ? ( url => $attr->{PCUrl}->[0] )
@@ -78,9 +78,9 @@ around BUILDARGS => sub {
                : ()
             ),
             %{$args}
-         );         
+         );
       }
-      
+
       return $class->$orig( @args );
    } else {
       return $class->$orig(@_);
@@ -92,15 +92,15 @@ around execute => sub {
    my $self               = shift;
    my ( $controller, $c ) = @_;
 
-   #do nothing if debug
+   # do nothing if debug
    return $self->$orig(@_)
       if ($c->debug);
-   
-   if($self->true_cache){
-      #if using a true cache
+
+   if ($self->true_cache) {
+      # if using a true cache
       _true_cache($orig,$self,@_);
-   }else{
-       #backup method (for back compat)
+   } else {
+       # backup method (for back compat)
       _pseudo_cache($orig,$self,@_);
    }
 };
@@ -109,15 +109,15 @@ sub _true_cache {
    my $orig               = shift;
    my $self               = shift;
    my ( $controller, $c ) = @_;
-   
+
    my $cache = $c->cache;
-   
+
    my $body;
    unless ($body = $cache->get($self->key)){
       $self->$orig(@_);
       $cache->set($self->key, $c->response->body);
    }
-   $c->response->body($body);   
+   $c->response->body($body);
 }
 
 sub _pseudo_cache {
@@ -139,7 +139,7 @@ sub _pseudo_cache {
       $self->is_cached(1);
    } else {
       $c->response->redirect($self->url, 300);
-   }      
+   }
 }
 
 1;
@@ -153,19 +153,19 @@ sub _pseudo_cache {
  use Moose;
  BEGIN { extends 'Catalyst::Controller::ActionRole' };
 
- #used with Catalyst::Plugin::Cache 
+ # used with Catalyst::Plugin::Cache
  sub cache_js :Local :Does(PseudoCache) PCTrueCache(1) {
    my ($self, $c) = @_;
    # Long running action to be cached
  }
- 
- #used with Catalyst::Plugin::Cache and the optional key attr
+
+ # used with Catalyst::Plugin::Cache and the optional key attr
  sub cache_with_key :Local :Does(PseudoCache) PCTrueCache(1) PCKey('rememberme'){
    my ($self, $c) = @_;
-   # Long running action to be cached   
+   # Long running action to be cached
  }
 
- #old attrs provided in mercy and love
+ # old attrs provided in mercy and love
  sub all_js :Local :Does(PseudoCache) PCUrl(/static/js/all.js) {
     my ($self, $c) = @_;
     # Long running action to be cached
@@ -186,12 +186,12 @@ server is run in development mode.
 =head2 PCTrueCache
 
 Setting PCTrueCache will use L<Catalyst::Plugin::Cache> and allow a real
-cache backend to do the work. 
+cache backend to do the work.
 
 =head2 PCKey
 
 PCKey is an optional way of providing a different key for the cache backend.
-The default key is 'Controller::Name/action'. 
+The default key is 'Controller::Name/action'.
 
 The two attributes below are DEPRECATED and provided for back compat only. They
 might disappear in the future. Using PCTrueCache and L<Catalyst::Plugin::Cache>
