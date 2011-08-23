@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+
+1.000000  2011-08-22 19:39:25 CST6CDT
   - Allow (and prefer) the use of Catalyst::Plugin::Cache
 
 0.093200 Mon Nov 16 21:22:00 CDT 2009
