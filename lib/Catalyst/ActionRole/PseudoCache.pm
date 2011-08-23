@@ -153,21 +153,15 @@ sub _pseudo_cache {
  BEGIN { extends 'Catalyst::Controller::ActionRole' };
 
  # used with Catalyst::Plugin::Cache
- sub cache_js :Local :Does(PseudoCache) PCTrueCache(1) {
+ sub cache_js :Local Does(PseudoCache) PCTrueCache(1) {
    my ($self, $c) = @_;
    # Long running action to be cached
  }
 
  # used with Catalyst::Plugin::Cache and the optional key attr
- sub cache_with_key :Local :Does(PseudoCache) PCTrueCache(1) PCKey('rememberme'){
+ sub cache_with_key :Local Does(PseudoCache) PCTrueCache(1) PCKey('rememberme'){
    my ($self, $c) = @_;
    # Long running action to be cached
- }
-
- # old attrs provided in mercy and love
- sub all_js :Local :Does(PseudoCache) PCUrl(/static/js/all.js) {
-    my ($self, $c) = @_;
-    # Long running action to be cached
  }
 
 =head1 DESCRIPTION
@@ -185,20 +179,21 @@ server is run in development mode.
 =head2 PCTrueCache
 
 Setting PCTrueCache will use L<Catalyst::Plugin::Cache> and allow a real
-cache backend to do the work.
+cache backend to do the work.  After version 2 of this module this will no
+longer need to be set and the old mode of this plugin will be removed entirely.
 
 =head2 PCKey
 
 PCKey is an optional way of providing a different key for the cache backend.
-The default key is 'Controller::Name/action'.
+The default key is C<Controller::Name/action>.
 
-The two attributes below are DEPRECATED and provided for back compat only. They
-might disappear in the future. Using PCTrueCache and L<Catalyst::Plugin::Cache>
+The two attributes below are B<DEPRECATED> and provided for back compat only. They
+might disappear in the future. Using C<PCTrueCache> and L<Catalyst::Plugin::Cache>
 is highly recommended.
 
 =head2 PCUrl
 
-Required when not using PCTrueCache.
+Required when not using L</PCTrueCache>.
 
 After the action runs once it will redirect to C<$PCUrl>.
 

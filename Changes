@@ -1,6 +1,7 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+  - Allow (and prefer) the use of Catalyst::Plugin::Cache
 
 0.093200 Mon Nov 16 21:22:00 CDT 2009
        - Don't delete tmp files in win32, it doesn't work
