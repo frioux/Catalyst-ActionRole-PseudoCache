@@ -207,6 +207,11 @@ So using the example given above for the C<all_js> action, the path will be
 
  $MyAppLocation/root/static/js/all.js
 
+=head1 THANKS
+
+Thanks to Geoffrey Darling for writing all the code for the modern true cache
+mode
+
 =head1 SEE ALSO
 
 L<Catalyst::Plugin::Cache>
