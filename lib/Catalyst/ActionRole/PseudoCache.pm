@@ -57,10 +57,7 @@ around BUILDARGS => sub {
       my @args;
       if ($attr->{PCTrueCache}) {
          @args = (
-            ($attr->{PCTrueCache}
-               ? ( true_cache => $attr->{PCTrueCache}->[0] )
-               : ()
-            ),
+            true_cache => 1,
             ($attr->{PCKey}
                ? ( key => $attr->{PCKey}->[0] )
                : ()
