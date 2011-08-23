@@ -101,33 +101,28 @@ around execute => sub {
       if ($c->debug);
 
    if ($self->true_cache) {
-      # if using a true cache
-      _true_cache($orig,$self,@_);
+      $self->_true_cache($orig,@_);
    } else {
        # backup method (for back compat)
-      _pseudo_cache($orig,$self,@_);
+      $self->_pseudo_cache($orig,@_);
    }
 };
 
 sub _true_cache {
-   my $orig               = shift;
-   my $self               = shift;
-   my ( $controller, $c ) = @_;
+   my ($self, $orig, $controller, $c, @rest) = @_;
 
    my $cache = $c->cache;
 
    my $body;
    unless ($body = $cache->get($self->key)){
-      $self->$orig(@_);
+      $self->$orig($controller, $c, @rest);
       $cache->set($self->key, $c->response->body);
    }
    $c->response->body($body);
 }
 
 sub _pseudo_cache {
-   my $orig               = shift;
-   my $self               = shift;
-   my ( $controller, $c ) = @_;
+   my ($self, $orig, $controller, $c, @rest) = @_;
 
    if (!$self->is_cached) {
       my $filename = File::Spec->catfile($c->path_to('root'), $self->path);
@@ -135,7 +130,7 @@ sub _pseudo_cache {
       unlink $filename if stat $filename;
       open my $js_fh, '>', $filename;
 
-      $self->$orig(@_);
+      $self->$orig($controller, $c, @rest);
 
       print {$js_fh} $c->response->body;
       close $js_fh;
