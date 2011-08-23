@@ -10,7 +10,7 @@ use Test::WWW::Mechanize::Catalyst;
 use File::Spec;
 use lib "$FindBin::Bin/../lib", "$FindBin::Bin/lib";
 my $root = File::Spec->catfile($FindBin::Bin,qw{lib TestApp root});
-mkdir $root;
+mkdir $root unless -e $root;
 
 my $mech = Test::WWW::Mechanize::Catalyst->new(catalyst_app => 'TestApp');
 $mech->get_ok('/test', 'get works when uncached');
@@ -31,7 +31,9 @@ done_testing;
 END {
    # for some reason unlinking doesn't work for tmp files in windows
    unless ($^O eq 'Win32') {
-      unlink File::Spec->catfile($root, 'foo.txt');
-      unlink File::Spec->catfile($root, 'bar.txt');
+      my ($f1, $f2) = map File::Spec->catfile($root, "$_.txt"), qw(foo bar);
+      unlink $f1 if -e $f1;
+      unlink $f2 if -e $f2;
+      rmdir $root if -e $root;
    }
 }
