@@ -5,6 +5,7 @@ package Catalyst::ActionRole::PseudoCache;
 use Moose::Role;
 use autodie;
 use File::Spec;
+use Carp qw(carp croak);
 
 has true_cache => (
    is      => 'rw',
@@ -64,6 +65,8 @@ around BUILDARGS => sub {
             ),
             %{$args}
          );
+         croak 'you must not set attributes that are not supported (PCUrl or PCPath) in true cache mode!'
+            if $attr->{PCUrl} || $attr->{PCPath};
       } else {
          @args = (
             ($attr->{PCUrl}
@@ -76,6 +79,10 @@ around BUILDARGS => sub {
             ),
             %{$args}
          );
+         croak q(if you don't use true cache mode you must set PCUrl!)
+            unless $attr->{PCUrl};
+
+         carp 'you are not using true cache mode, which is pretty sucky, and more importantly, deprecated'
       }
 
       return $class->$orig( @args );
