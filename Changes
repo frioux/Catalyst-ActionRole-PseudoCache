@@ -2,6 +2,9 @@ Revision history for {{$dist->name}}
 
 {{$NEXT}}
 
+1.000002  2012-11-17 17:20:07 CST6CDT
+  - Put MetaYAML back in dist
+
 1.000001  2011-08-22 19:41:33 CST6CDT
   - Allow (and prefer) the use of Catalyst::Plugin::Cache (Geoff Darling)
 
