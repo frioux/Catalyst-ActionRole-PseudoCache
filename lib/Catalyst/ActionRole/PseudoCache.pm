@@ -113,12 +113,12 @@ sub _true_cache {
 
    my $cache = $c->cache;
 
-   my $body;
-   unless ($body = $cache->get($self->key)){
+   if (my $body = $cache->get($self->key)){
+      $c->response->body($body);
+   } else {
       $self->$orig($controller, $c, @rest);
       $cache->set($self->key, $c->response->body);
    }
-   $c->response->body($body);
 }
 
 sub _pseudo_cache {

@@ -1,6 +1,7 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+  - Fix incredible, deal breaking bug in True Cache mode
 
 1.000002  2012-11-17 17:20:07 CST6CDT
   - Put MetaYAML back in dist
