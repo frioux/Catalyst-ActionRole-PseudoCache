@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+
+1.000003  2013-01-03 09:22:43 CST6CDT
   - Fix incredible, deal breaking bug in True Cache mode
 
 1.000002  2012-11-17 17:20:07 CST6CDT
